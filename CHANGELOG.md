@@ -9,7 +9,7 @@
   - It has Email ID by default, just call the function and voila... 
   - **Verifying an email** again call a function and that's it.. 
 
-## 0.0.1.1
+## 0.0.1+1
 ## Next Plans
   - Making the availablity of custom Email Ids.
   - Supporting different formats.
