@@ -1,6 +1,6 @@
 name: email_auth
-description: A Flutter package to verify emails using OTP, the service will help you verify the emails provided to you are valid and genuine ones, so we don't get random data stored in our Databases, and also prevent misusing our app.
-version: 0.0.1+1
+description: A Flutter package to verify emails using OTP based method, to make sure we get real world data.
+version: 0.0.1+1.5
 # author: Saran Surya
 homepage: https://github.com/saran-surya/email_auth.git
 
@@ -22,20 +22,15 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-  # This section identifies this Flutter project as a plugin project.
-  # The 'pluginClass' and Android 'package' identifiers should not ordinarily
-  # be modified. They are used by the tooling to maintain consistency when
-  # adding or updating assets for this project.
   plugin:
     platforms:
-    # This plugin project was generated without specifying any
-    # platforms with the `--platform` argument. If you see the `fake_platform` map below, remove it and
-    # then add platforms following the instruction here:
-    # https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms
-    # -------------------
-      some_platform:
-        pluginClass: somePluginClass
-    # -------------------
+      ios:
+        pluginClass: EmailAuth
+      macos:
+        pluginClass: EmailAuth
+      web:
+        pluginClass: EmailAuth
+        fileName: email_Auth.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
