@@ -14,3 +14,6 @@
 ## Next Plans
   - Making the availablity of custom Email Ids.
   - Supporting different formats.
+
+## 0.0.1+1.6
+  - dependency changes
