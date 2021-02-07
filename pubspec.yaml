@@ -1,6 +1,6 @@
 name: email_auth
 description: A Flutter package to verify emails using OTP, the service will help you verify the emails provided to you are valid and genuine ones, so we don't get random data stored in our Databases, and also prevent misusing our app.
-version: 0.0.1
+version: 0.0.1+1
 # author: Saran Surya
 homepage: https://github.com/saran-surya/email_auth.git
 
