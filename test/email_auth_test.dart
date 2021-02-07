@@ -1,19 +1,9 @@
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:email_auth/email_auth.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('email_auth');
-  TestWidgetsFlutterBinding.ensureInitialized();
-  setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
-    });
-  });
-  tearDown(() {
-    channel.setMockMethodCallHandler(null);
-  });
-  test('getPlatformVersion', () async {
-    expect(await EmailAuth.platformVersion, '42');
+  test('check failing validation', () {
+    expect(EmailAuth.validate(recieverMail: "sample", userOTP: "15252"), false);
   });
 }
