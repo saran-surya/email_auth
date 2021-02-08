@@ -4,9 +4,11 @@
 // directory. You can also find a detailed instruction on how to add platforms in the `pubspec.yaml` at https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms.
 
 import 'dart:async';
+import 'dart:convert' as convert;
+
 // import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
+import 'package:meta/meta.dart' show required;
 
 class EmailAuth {
   // static const MethodChannel _channel = const MethodChannel('email_auth');
@@ -27,17 +29,17 @@ class EmailAuth {
     return regExp.hasMatch(email);
   }
 
-  static Future<bool> sendOtp({String recieverMail}) async {
+  static Future<bool> sendOtp({@required String receiverMail}) async {
     try {
-      if (!_isEmail(recieverMail)) {
+      if (!_isEmail(receiverMail)) {
         print("email ID is not valid");
         return false;
       }
       http.Response _response = await http.get(
-          "https://app-authenticator.herokuapp.com/auth/${recieverMail.toLowerCase()}?CompanyName=$sessionName");
+          "https://app-authenticator.herokuapp.com/auth/${receiverMail.toLowerCase()}?CompanyName=$sessionName");
       Map<String, dynamic> _data = convert.jsonDecode(_response.body);
       if (_data["success"]) {
-        _finalEmail = recieverMail;
+        _finalEmail = receiverMail;
         _finalOTP = _data["OTP"].toString();
         return true;
       } else {
@@ -49,9 +51,12 @@ class EmailAuth {
     }
   }
 
-  static bool validate({String recieverMail, String userOTP}) {
+  static bool validate({
+    @required String receiverMail,
+    @required String userOTP,
+  }) {
     if (_finalEmail.length > 0 && _finalOTP.length > 0) {
-      if (recieverMail.trim() == _finalEmail.trim() &&
+      if (receiverMail.trim() == _finalEmail.trim() &&
           userOTP.trim() == _finalOTP.trim()) {
         print("Validation success");
         return true;

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:email_auth/email_auth.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,14 +21,14 @@ class _MyAppState extends State<MyApp> {
 
   void verify() {
     print(EmailAuth.validate(
-        recieverMail: _emailcontroller.value.text,
+        receiverMail: _emailcontroller.value.text,
         userOTP: _otpcontroller.value.text));
   }
 
   void sendOtp() async {
     EmailAuth.sessionName = "Company Name";
     bool result =
-        await EmailAuth.sendOtp(recieverMail: _emailcontroller.value.text);
+        await EmailAuth.sendOtp(receiverMail: _emailcontroller.value.text);
     if (result) {
       setState(() {
         submitValid = true;
@@ -97,9 +97,7 @@ class _MyAppState extends State<MyApp> {
                         ),
                       ),
                     )
-                  : Container(
-                      height: 1,
-                    )
+                  : SizedBox(height: 1)
             ],
           ),
         )),
