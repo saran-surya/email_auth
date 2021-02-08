@@ -19,4 +19,4 @@
   - dependency changes
 
 ## 0.0.1+1.7
-  - dependency changes, minor corrections & enhancement from PULL Requests
+  - dependency cleanup, minor corrections & enhancement from PULL Requests
