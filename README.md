@@ -56,4 +56,14 @@ Inside your stateLess / Statefull widget class
       ...
 ```
 
+## Reference
+
+Property |   Type     | Desciption
+-------- |------------| ---------------
+EmailAuth |   `Main class`     | <sub>use the Class variables to modify the session name / (Company / org Name)</sub>
+EmailAuth.sessionName|   `Callback`     | <sub>Called when the user needs to verify the OTP thet he has typed in</sub>
+EmailAuth.sendOtp(receiverMail : "") |   `Callback`     | <sub>Takes the Email ID and sends OTP</sub>
+EmailAuth.validate(receiverMail : "", userOTP: "")|   `Callback`     | <sub>Verifies if the provided OTP and mail ID are correct and returns a boolean</sub>
+EmailAuth. |   `Callback`     | <sub>Takes the Email ID and sends OTP</sub>
+
 # Thankyou ❤️
