@@ -20,25 +20,27 @@ Inside your stateLess / Statefull widget class
   ...
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
-  //create a method to send the Emails
+  ///create a method to send the Emails
   void sendOtp()async{
+    ///Accessing the EmailAuth class from the package
        EmailAuth.sessionName = "Sample";
+    ///a boolean value will be returned if the OTP is sent successfully
     var data =
         await EmailAuth.sendOtp(recieverMail: _emailController.value.text);
     if(!data){
-        //have your error handling logic here, like a snackbar or popup widget
+        ///have your error handling logic here, like a snackbar or popup widget
     }
   }
-  //create a bool method to validate if the OTP is true
+  ///create a bool method to validate if the OTP is true
   bool verify(){
     return(EmailAuth.validate(
         recieverMail: _emailController.value.text, //to make sure the email ID is not changed
         userOTP: _otpController.value.text)); //pass in the OTP typed in
-    //This will return you a bool, and you can proceed further after that, add a fail case and a success case (result will be true/false)
+    ///This will return you a bool, and you can proceed further after that, add a fail case and a success case (result will be true/false)
   }
   ...
    Widget build(BuildContext context) {
-   // have your controllers assigned to textFields or textFormFields
+   /// have your controllers assigned to textFields or textFormFields
    ...
     body: Center(
         child: Column(

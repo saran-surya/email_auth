@@ -20,3 +20,6 @@
 
 ## 0.0.1+1.7
   - dependency cleanup, minor corrections & enhancement from PULL Requests
+
+## 0.0.1+1.8
+  - Added reference documents

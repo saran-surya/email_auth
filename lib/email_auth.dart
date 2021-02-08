@@ -4,6 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class EmailAuth {
+  /// A class to handle the operations
+  ///
+  /// Assign your session Name / Company name here using the static method
   static String sessionName;
   static String _finalOTP;
   static String _finalEmail;
@@ -16,6 +19,7 @@ class EmailAuth {
     return regExp.hasMatch(email);
   }
 
+  ///This functions returns a future of boolean stating if the OTP was sent.
   static Future<bool> sendOtp({@required String receiverMail}) async {
     try {
       if (!_isEmail(receiverMail)) {
@@ -38,6 +42,7 @@ class EmailAuth {
     }
   }
 
+  ///This functions returns a future of boolean stating if the user provided data is correct
   static bool validate({
     @required String receiverMail,
     @required String userOTP,
