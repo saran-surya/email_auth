@@ -17,3 +17,6 @@
 
 ## 0.0.1+1.6
   - dependency changes
+
+## 0.0.1+1.7
+  - dependency changes, minor corrections & enhancement from PULL Requests
