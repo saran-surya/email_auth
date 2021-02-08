@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
-import 'package:meta/meta.dart' show required;
+import 'package:flutter/material.dart';
 
 class EmailAuth {
   static String sessionName;
