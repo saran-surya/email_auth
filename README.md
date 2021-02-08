@@ -60,10 +60,11 @@ Inside your stateLess / Statefull widget class
 
 Property |   Type     | Desciption
 -------- |------------| ---------------
-EmailAuth |   `Main class`     | <sub>use the Class variables to modify the session name / (Company / org Name)</sub>
-EmailAuth.sessionName|   `Callback`     | <sub>Called when the user needs to verify the OTP thet he has typed in</sub>
-EmailAuth.sendOtp(receiverMail : "") |   `Callback`     | <sub>Takes the Email ID and sends OTP</sub>
-EmailAuth.validate(receiverMail : "", userOTP: "")|   `Callback`     | <sub>Verifies if the provided OTP and mail ID are correct and returns a boolean</sub>
-EmailAuth. |   `Callback`     | <sub>Takes the Email ID and sends OTP</sub>
+EmailAuth |   `class`     | <sub>The main wrapper class for all the methods and variables</sub>
+EmailAuth.sessionName|   `Callback`     | <sub>Call this method to set the CompanyName / Org Name => "sessionName"</sub>
+EmailAuth.sendOtp(receiverMail : "") |   `boolean function`     | <sub>Takes the Email ID and sends OTP returns a boolean</sub>
+EmailAuth.validate(receiverMail : "", userOTP: "")|   `boolean function`     | <sub>Verifies if the provided OTP and mail ID are correct and returns a boolean</sub>
+receiverMail |   `String`     | <sub>Takes in the user entered Email ID</sub>
+userOTP |   `String`     | <sub>Takes in the user entered OTP that was sent through mail</sub>
 
 # Thankyou ❤️
