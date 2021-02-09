@@ -1,7 +1,8 @@
 name: email_auth
 description: A Flutter package to verify emails using OTP based method, to make sure we get real world data.
-version: 0.0.1+1.8
+version: 0.0.1+1.9
 homepage: https://github.com/saran-surya/email_auth.git
+issue_tracker: https://github.com/saran-surya/email_auth/issues
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

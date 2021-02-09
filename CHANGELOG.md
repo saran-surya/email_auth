@@ -23,3 +23,7 @@
 
 ## 0.0.1+1.8
   - Added reference documents
+
+## 0.0.1+1.9
+  - Added extra logs for better debugging
+  - Added issue link
