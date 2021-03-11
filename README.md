@@ -69,4 +69,6 @@ EmailAuth.validate(receiverMail : "", userOTP: "")|   `boolean function`     | <
 receiverMail |   `String`     | <sub>Takes in the user entered Email ID</sub>
 userOTP |   `String`     | <sub>Takes in the user entered OTP that was sent through mail</sub>
 
+## Privacy Policy
+We never share the email ID's we get to any service, nor do we use them for our purposes, we regularly clean up the sent mail section, and we never save any data on our servers, we work on the main motive to be **OPEN SOURCE** , If so you have any queries kindly mail me at the email ID provided Always happy to answer :)
 # Thankyou ❤️

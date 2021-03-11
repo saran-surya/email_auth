@@ -27,3 +27,6 @@
 ## 0.0.1+1.9
   - Added extra logs for better debugging
   - Added issue link
+
+## 0.0.1+2
+  - Updated Privacy notice
