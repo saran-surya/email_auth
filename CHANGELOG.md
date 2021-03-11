@@ -30,3 +30,6 @@
 
 ## 0.0.1+2
   - Updated Privacy notice
+
+## 0.0.1+3
+  - Merged a new pull request, Migrating to Null safety and package upgrades.

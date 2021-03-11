@@ -56,7 +56,7 @@ class EmailAuth {
     if (_finalEmail.length > 0 && _finalOTP.length > 0) {
       if (receiverMail.trim() == _finalEmail.trim() &&
           userOTP.trim() == _finalOTP.trim()) {
-        print("Validation success");
+        print("Validation success the user can be validated");
         return true;
       } else {
         print("Validation Falied");
