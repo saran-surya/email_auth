@@ -29,9 +29,10 @@ class EmailAuth {
       print("Email ID is valid");
       http.Response _response = await http.get(
         Uri.parse(
-          "https://app-authenticator.herokuapp.com/auth/${receiverMail.toLowerCase()}?CompanyName=$sessionName",
+          "https://app-authenticator.herokuapp.com/dart/auth/${receiverMail.toLowerCase()}?CompanyName=$sessionName",
         ),
       );
+
       Map<String, dynamic> _data = convert.jsonDecode(_response.body);
       if (_data["success"]) {
         _finalEmail = receiverMail;
