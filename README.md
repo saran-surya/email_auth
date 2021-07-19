@@ -26,7 +26,7 @@ Inside your stateLess / Statefull widget class
        EmailAuth.sessionName = "Sample";
     ///a boolean value will be returned if the OTP is sent successfully
     var data =
-        await EmailAuth.sendOtp(recieverMail: _emailController.value.text);
+        await EmailAuth.sendOtp(receiverMail: _emailController.value.text);
     if(!data){
         ///have your error handling logic here, like a snackbar or popup widget
     }
@@ -34,7 +34,7 @@ Inside your stateLess / Statefull widget class
   ///create a bool method to validate if the OTP is true
   bool verify(){
     return(EmailAuth.validate(
-        recieverMail: _emailController.value.text, //to make sure the email ID is not changed
+        receiverMail: _emailController.value.text, //to make sure the email ID is not changed
         userOTP: _otpController.value.text)); //pass in the OTP typed in
     ///This will return you a bool, and you can proceed further after that, add a fail case and a success case (result will be true/false)
   }
@@ -63,11 +63,11 @@ Inside your stateLess / Statefull widget class
 Property |   Type     | Desciption
 -------- |------------| ---------------
 EmailAuth |   `class`     | <sub>The main wrapper class for all the methods and variables</sub>
-EmailAuth.sessionName|   `Callback`     | <sub>Call this method to set the CompanyName / Org Name => "sessionName"</sub>
+EmailAuth.sessionName|   `STATIC value`     | <sub>Call this method to set the CompanyName / Org Name => "sessionName"</sub>
 EmailAuth.sendOtp(receiverMail : "") |   `boolean function`     | <sub>Takes the Email ID and sends OTP returns a boolean</sub>
 EmailAuth.validate(receiverMail : "", userOTP: "")|   `boolean function`     | <sub>Verifies if the provided OTP and mail ID are correct and returns a boolean</sub>
-receiverMail |   `String`     | <sub>Takes in the user entered Email ID</sub>
-userOTP |   `String`     | <sub>Takes in the user entered OTP that was sent through mail</sub>
+receiverMail |   `String : method parameter`     | <sub>Takes in the user entered Email ID</sub>
+userOTP |   `String : method parameter`     | <sub>Takes in the user entered OTP that was sent through mail</sub>
 
 ## Privacy Policy
 We never share the email ID's we get to any service, nor do we use them for our purposes, we regularly clean up the sent mail section, and we never save any data on our servers, we work on the main motive to be **OPEN SOURCE** , If so you have any queries kindly mail me at the email ID provided Always happy to answer :)
