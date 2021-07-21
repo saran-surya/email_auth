@@ -1,57 +1,103 @@
+/// This file contais a class that has the options to set the session name and the serverUrl
+/// - session name : will be the company name
+/// - serverUrl : (defaults : 'default') OR the valid server url link provided by the user generated using the node package :
+
 import 'dart:async';
 import 'dart:convert' as convert;
-
 import 'package:http/http.dart' as http;
 
+late String _finalOTP;
+late String _finalEmail;
+
+/// This function will check if the provided email ID is valid or not
+bool _isEmail(String email) {
+  String p =
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+  RegExp regExp = new RegExp(p);
+  return regExp.hasMatch(email);
+}
+
+bool _isValidServer(String url) {
+  String reg = r".*/dart/auth/";
+  return RegExp(reg).hasMatch(url);
+}
+
+/// This function will take care of converting the reponse data and verify the mail ID provided.
+bool convertData(http.Response _response, String receiverMail) {
+  try {
+    Map<String, dynamic> _data = convert.jsonDecode(_response.body);
+    if (_data["success"]) {
+      _finalOTP = _data["OTP"].toString();
+      print("OTP sent successfully !");
+      return true;
+    } else {
+      print("OTP was not sent failure");
+      return false;
+    }
+  } catch (error) {
+    print("--- Package Error ---");
+    print(error);
+    print("--- End Package Error ---");
+    return false;
+  }
+}
+
 class EmailAuth {
-  /// A class to handle the operations
-  ///
+  /// A class to handle the OTP operations
   /// Assign your session Name / Company name here using the static method
   static late String sessionName;
-  static late String _finalOTP;
-  static late String _finalEmail;
 
-  ///This function will check if the provided email ID is valid or not
-  static bool _isEmail(String email) {
-    String p =
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
-    RegExp regExp = new RegExp(p);
-    return regExp.hasMatch(email);
-  }
+  /// SERVER : defaults to default
+  static String serverUrl = 'default';
 
-  ///This functions returns a future of boolean stating if the OTP was sent.
+  /// This functions returns a future of boolean stating if the OTP was sent.
   static Future<bool> sendOtp({required String receiverMail}) async {
     try {
+      /// Setting the final Email email for validation purposes
+      _finalEmail = receiverMail;
+
       if (!_isEmail(receiverMail)) {
         print("email ID is not valid");
         return false;
       }
       print("Email ID is valid");
-      http.Response _response = await http.get(
-        Uri.parse(
-          "https://app-authenticator.herokuapp.com/dart/auth/${receiverMail.toLowerCase()}?CompanyName=$sessionName",
-        ),
-      );
+      http.Response _response;
 
-      Map<String, dynamic> _data = convert.jsonDecode(_response.body);
-      if (_data["success"]) {
-        _finalEmail = receiverMail;
-        _finalOTP = _data["OTP"].toString();
-        print("OTP sent successfully !");
-        return true;
-      } else {
-        print("OTP was not sent failure");
-        return false;
+      /// Constant ending for every url
+      String constantEnd =
+          "${receiverMail.toLowerCase()}?CompanyName=$sessionName";
+
+      if (serverUrl != 'default' && _isValidServer(serverUrl)) {
+        _response = await http.get(
+          Uri.parse(serverUrl + constantEnd),
+        );
+
+        /// Return the boolean data from the converted function
+        return convertData(_response, receiverMail);
+      } else if (serverUrl == 'default') {
+        /// This will use your API and contact with your server on heroku.
+        _response = await http.get(
+          Uri.parse(
+            "https://app-authenticator.herokuapp.com/dart/auth/" + constantEnd,
+          ),
+        );
+
+        /// Return the boolean data from the converted function
+        return convertData(_response, receiverMail);
       }
-    } catch (e) {
-      print("--This error is from the package--");
-      print(e);
-      print("--End package error message--");
+
+      /// Defaults false by default
+      print("--- The server URL is not valid ---");
+      return false;
+    } catch (error) {
+      print("--- This error is from the package ---");
+      print(error);
+      print("--- End package error message ---");
       return false;
     }
   }
 
-  ///This functions returns a future of boolean stating if the user provided data is correct
+  /// This functions returns a future of boolean stating if the user provided data is correct
   static bool validate(
       {required String receiverMail, required String userOTP}) {
     if (_finalEmail.length > 0 && _finalOTP.length > 0) {

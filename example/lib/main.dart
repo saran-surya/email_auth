@@ -11,27 +11,32 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  ///the boolean to handle the dynamic operations
+  /// The boolean to handle the dynamic operations
   bool submitValid = false;
 
-  ///testediting controllers to get the value from text fields
+  /// Text editing controllers to get the value from text fields
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _otpcontroller = TextEditingController();
   @override
   void initState() {
     super.initState();
+
+    /// Setting the session name or the Company name
+    EmailAuth.sessionName = "Company Name";
+
+    /// Set your custom server URL
+    // EmailAuth.serverUrl = "server URL";
   }
 
-  ///a void function to verify if the Data provided is true
+  /// a void function to verify if the Data provided is true
   void verify() {
     print(EmailAuth.validate(
         receiverMail: _emailcontroller.value.text,
         userOTP: _otpcontroller.value.text));
   }
 
-  ///a void funtion to send the OTP to the user
+  /// a void funtion to send the OTP to the user
   void sendOtp() async {
-    EmailAuth.sessionName = "Company Name";
     bool result =
         await EmailAuth.sendOtp(receiverMail: _emailcontroller.value.text);
     if (result) {
@@ -78,7 +83,7 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
 
-              ///A dynamically rendering text field
+              /// A dynamically rendering text field
               (submitValid)
                   ? TextField(
                       controller: _otpcontroller,
