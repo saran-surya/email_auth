@@ -1,3 +1,5 @@
+# ** Currently on Maintanence, No worries the package will work fine, We are updating to match the user requests 😸🚀
+
 # Email verification for Flutter Apps using DART.
 
 ##### Key points :
