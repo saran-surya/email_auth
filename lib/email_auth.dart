@@ -68,8 +68,6 @@ class EmailAuth {
   // The session name
   String sessionName;
 
-  // Path for the file
-
   // Contructing the Class with the server and the session Name
   EmailAuth({
     required this.sessionName,
@@ -121,6 +119,8 @@ class EmailAuth {
         print("email-auth >> email ID provided is INVALID");
         return false;
       }
+
+      /// Defaults to the test server (reverts) : if the remote server is provided
       if (this._server.isEmpty) {
         print(
             "email-auth >> Remote server is not available -- using test server --");
