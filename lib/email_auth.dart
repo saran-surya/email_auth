@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
+import 'dart:io';
 
 late String _finalOTP;
 late String _finalEmail;
@@ -42,75 +43,124 @@ bool convertData(http.Response _response, String receiverMail) {
   }
 }
 
+// class EmailAuth {
+//   /// A class to handle the OTP operations
+//   /// Assign your session Name / Company name here using the static method
+//   static late String sessionName;
+
+//   /// SERVER : defaults to default
+//   static String serverUrl = 'default';
+
+//   /// This functions returns a future of boolean stating if the OTP was sent.
+//   static Future<bool> sendOtp({required String receiverMail}) async {
+//     try {
+//       /// Setting the final Email email for validation purposes
+//       _finalEmail = receiverMail;
+
+//       if (!_isEmail(receiverMail)) {
+//         print("email ID is not valid");
+//         return false;
+//       }
+//       print("Email ID is valid");
+//       http.Response _response;
+
+//       /// Constant ending for every url
+//       String constantEnd =
+//           "${receiverMail.toLowerCase()}?CompanyName=$sessionName";
+
+//       if (serverUrl != 'default' && _isValidServer(serverUrl)) {
+//         _response = await http.get(
+//           Uri.parse(serverUrl + constantEnd),
+//         );
+
+//         /// Return the boolean data from the converted function
+//         return convertData(_response, receiverMail);
+//       } else if (serverUrl == 'default') {
+//         /// This will use your API and contact with your server on heroku.
+//         _response = await http.get(
+//           Uri.parse(
+//             "https://app-authenticator.herokuapp.com/dart/auth/" + constantEnd,
+//           ),
+//         );
+
+//         /// Return the boolean data from the converted function
+//         return convertData(_response, receiverMail);
+//       }
+
+//       /// Defaults false by default
+//       print("--- The server URL is not valid ---");
+//       return false;
+//     } catch (error) {
+//       print("--- This error is from the package ---");
+//       print(error);
+//       print("--- End package error message ---");
+//       return false;
+//     }
+//   }
+
+//   /// This functions returns a future of boolean stating if the user provided data is correct
+//   static bool validate(
+//       {required String receiverMail, required String userOTP}) {
+//     if (_finalEmail.length > 0 && _finalOTP.length > 0) {
+//       if (receiverMail.trim() == _finalEmail.trim() &&
+//           userOTP.trim() == _finalOTP.trim()) {
+//         print("Validation success the user can be validated");
+//         return true;
+//       } else {
+//         print("Validation Falied");
+//         return false;
+//       }
+//     }
+//     print("Missing Data");
+//     return false;
+//   }
+// }
+
 class EmailAuth {
-  /// A class to handle the OTP operations
-  /// Assign your session Name / Company name here using the static method
-  static late String sessionName;
+  // The server
+  String server;
+  // The session name
+  String sessionName;
 
-  /// SERVER : defaults to default
-  static String serverUrl = 'default';
+  EmailAuth({
+    required this.server,
+    required this.sessionName,
+  }) {
+    /// initializing the configuration
+    _init();
+  }
 
-  /// This functions returns a future of boolean stating if the OTP was sent.
-  static Future<bool> sendOtp({required String receiverMail}) async {
-    try {
-      /// Setting the final Email email for validation purposes
-      _finalEmail = receiverMail;
-
-      if (!_isEmail(receiverMail)) {
-        print("email ID is not valid");
-        return false;
+  /// Used to verify the presence of the server configurations
+  _init() {
+    if (this.server == 'config') {
+      String filePath = readConfig(Directory.current);
+      if (filePath != "") {
+        print(filePath);
+        String contents = new File(filePath).readAsStringSync();
+        var serverData = convert.json.decode(contents);
+        print(serverData['server']);
+        print(serverData['key']);
       }
-      print("Email ID is valid");
-      http.Response _response;
-
-      /// Constant ending for every url
-      String constantEnd =
-          "${receiverMail.toLowerCase()}?CompanyName=$sessionName";
-
-      if (serverUrl != 'default' && _isValidServer(serverUrl)) {
-        _response = await http.get(
-          Uri.parse(serverUrl + constantEnd),
-        );
-
-        /// Return the boolean data from the converted function
-        return convertData(_response, receiverMail);
-      } else if (serverUrl == 'default') {
-        /// This will use your API and contact with your server on heroku.
-        _response = await http.get(
-          Uri.parse(
-            "https://app-authenticator.herokuapp.com/dart/auth/" + constantEnd,
-          ),
-        );
-
-        /// Return the boolean data from the converted function
-        return convertData(_response, receiverMail);
-      }
-
-      /// Defaults false by default
-      print("--- The server URL is not valid ---");
-      return false;
-    } catch (error) {
-      print("--- This error is from the package ---");
-      print(error);
-      print("--- End package error message ---");
-      return false;
     }
   }
 
-  /// This functions returns a future of boolean stating if the user provided data is correct
-  static bool validate(
-      {required String receiverMail, required String userOTP}) {
-    if (_finalEmail.length > 0 && _finalOTP.length > 0) {
-      if (receiverMail.trim() == _finalEmail.trim() &&
-          userOTP.trim() == _finalOTP.trim()) {
-        print("Validation success the user can be validated");
-        return true;
-      } else {
-        print("Validation Falied");
-        return false;
+  String getConfigPath(root) {
+    return "";
+  }
+
+  String readConfig(Directory rootDir) {
+    // print(rootDir.path);
+    if (!rootDir.path.contains("lib")) {
+      print("File not found");
+      return "";
+    }
+    List<FileSystemEntity> entries =
+        rootDir.listSync(recursive: false).toList();
+    for (var file in entries) {
+      if (file is File && file.path.contains("auth.config")) {
+        return (file.path);
       }
     }
-    print("Missing Data");
-    return false;
+    return readConfig(rootDir.parent);
   }
 }
