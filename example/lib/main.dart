@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
     );
 
     /// Configuring the remote server
-    // emailAuth.config(remoteServerConfiguration);
+    emailAuth.config(remoteServerConfiguration);
   }
 
   /// a void function to verify if the Data provided is true
@@ -49,8 +49,8 @@ class _MyAppState extends State<MyApp> {
   /// a void funtion to send the OTP to the user
   /// Can also be converted into a Boolean function and render accordingly for providers
   void sendOtp() async {
-    bool result =
-        await emailAuth.sendOtp(recipientMail: _emailcontroller.value.text);
+    bool result = await emailAuth.sendOtp(
+        recipientMail: _emailcontroller.value.text, otpLength: 5);
     if (result) {
       setState(() {
         submitValid = true;

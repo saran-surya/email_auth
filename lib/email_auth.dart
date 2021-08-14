@@ -39,6 +39,7 @@ Future<bool> _isValidServer(String url) async {
 bool _convertData(http.Response _response, String recipientMail) {
   try {
     Map<String, dynamic> _data = convert.jsonDecode(_response.body);
+    print(_data); // : For future verification
 
     /// On Success get the data from the message and store them in the variables for the final verification
     if (_data["success"]) {
@@ -113,7 +114,8 @@ class EmailAuth {
 
   /// Takes care of sending the OTP to the server.
   /// returns a Boolean.
-  Future<bool> sendOtp({required String recipientMail}) async {
+  Future<bool> sendOtp(
+      {required String recipientMail, int otpLength = 6}) async {
     try {
       if (!_isEmail(recipientMail)) {
         print("email-auth >> email ID provided is INVALID");
@@ -128,9 +130,9 @@ class EmailAuth {
 
         return _convertData(_response, recipientMail);
       } else if (_validRemote) {
-        // TODO : Pending remote server section
-        print("remote server is valid");
-        return true;
+        http.Response _response = await http.get(Uri.parse(
+            "${this._server}/dart/auth/$recipientMail?CompanyName=${this.sessionName}&key=${this._serverKey}&otpLength=$otpLength"));
+        return _convertData(_response, recipientMail);
       }
       return false;
     } catch (error) {
