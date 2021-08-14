@@ -1,6 +1,11 @@
 import 'package:email_auth/email_auth.dart';
 import 'package:flutter/material.dart';
 
+/// Importing the configuration file to pass them to the EmailAuth instance
+/// You can have a custom path and a variable name,
+/// but the Map should be in the pattern {server : "", serverKey : ""}
+import 'package:email_auth_example/auth.config.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -17,12 +22,20 @@ class _MyAppState extends State<MyApp> {
   /// Text editing controllers to get the value from text fields
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _otpcontroller = TextEditingController();
+
+  EmailAuth emailAuth;
+
   @override
   void initState() {
     super.initState();
 
+    emailAuth = new EmailAuth(
+      sessionName: "Sample session",
+    );
+    // emailAuth.config(remoteServerConfiguration);
+
     /// Setting the session name or the Company name
-    EmailAuth.sessionName = "Company Name";
+    // EmailAuth.sessionName = "Company Name";
 
     /// Set your custom server URL
     // EmailAuth.serverUrl = "server URL";
@@ -30,15 +43,16 @@ class _MyAppState extends State<MyApp> {
 
   /// a void function to verify if the Data provided is true
   void verify() {
-    print(EmailAuth.validate(
-        receiverMail: _emailcontroller.value.text,
-        userOTP: _otpcontroller.value.text));
+    print("Inside validate");
+    // print(EmailAuth.validate(
+    //     receiverMail: _emailcontroller.value.text,
+    //     userOTP: _otpcontroller.value.text));
   }
 
   /// a void funtion to send the OTP to the user
   void sendOtp() async {
     bool result =
-        await EmailAuth.sendOtp(receiverMail: _emailcontroller.value.text);
+        await emailAuth.sendOtp(recipientMail: _emailcontroller.value.text);
     if (result) {
       setState(() {
         submitValid = true;

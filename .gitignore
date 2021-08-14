@@ -7,3 +7,5 @@
 build/
 
 lib/test/
+
+auth.config.dart
