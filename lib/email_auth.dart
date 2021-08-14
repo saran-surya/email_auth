@@ -116,12 +116,33 @@ bool convertData(http.Response _response, String receiverMail) {
 //   }
 // }
 
+/// Finds the location of the configuration file,
+/// and returns the complete path of the file.
+String findConfig(Directory rootDir) {
+  // print(rootDir.path);
+  if (!rootDir.path.contains("lib")) {
+    print("File not found");
+    return "";
+  }
+  List<FileSystemEntity> entries = rootDir.listSync(recursive: false).toList();
+  for (var file in entries) {
+    if (file is File && file.path.contains("auth.config")) {
+      return (file.path);
+    }
+  }
+  return findConfig(rootDir.parent);
+}
+
 class EmailAuth {
   // The server
   String server;
   // The session name
   String sessionName;
 
+  late String _remoteServer;
+  late String _remoteServerKey;
+
+  // Contructing the Class with the server and the session Name
   EmailAuth({
     required this.server,
     required this.sessionName,
@@ -133,34 +154,47 @@ class EmailAuth {
   /// Used to verify the presence of the server configurations
   _init() {
     if (this.server == 'config') {
-      String filePath = readConfig(Directory.current);
+      // find the path of the configuration file
+      String filePath = findConfig(Directory.current);
       if (filePath != "") {
         print(filePath);
         String contents = new File(filePath).readAsStringSync();
-        var serverData = convert.json.decode(contents);
-        print(serverData['server']);
-        print(serverData['key']);
+        Map<String, String> serverData = convert.json.decode(contents);
+        if (serverData.containsKey('server') &&
+            _isValidServer(serverData['server']!)) {
+          print("The configurations are perfect.");
+          this._remoteServer = serverData['server']!;
+          this._remoteServerKey = serverData['key']!;
+        }
+      } else {
+        print("email-auth >> The config file is missing");
       }
     }
   }
 
-  String getConfigPath(root) {
-    return "";
-  }
-
-  String readConfig(Directory rootDir) {
-    // print(rootDir.path);
-    if (!rootDir.path.contains("lib")) {
-      print("File not found");
-      return "";
-    }
-    List<FileSystemEntity> entries =
-        rootDir.listSync(recursive: false).toList();
-    for (var file in entries) {
-      if (file is File && file.path.contains("auth.config")) {
-        return (file.path);
+  Future<bool> sendOtp({required String recipientMail}) async {
+    try {
+      if (!_isEmail(recipientMail)) {
+        print("email-auth >> email ID is INVALID");
+        return false;
       }
+      if (this._remoteServer.isEmpty) {
+        print(
+            "email-auth >> Remote server is not available -- using test server --");
+        http.Response _response = await http.get(Uri.parse(
+            "https://app-authenticator.herokuapp.com/dart/auth/${recipientMail}?CompanyName=${this.sessionName}"));
+
+        return convertData(_response, recipientMail);
+      } else if (_isValidServer(this._remoteServer)) {
+        print("remote server is valid");
+        return true;
+      }
+      return false;
+    } catch (error) {
+      print("--- Package Error ---");
+      print(error);
+      print("--- End Package Error ---");
+      return false;
     }
-    return readConfig(rootDir.parent);
   }
 }
