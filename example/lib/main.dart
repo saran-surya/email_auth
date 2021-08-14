@@ -29,27 +29,25 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
+    // initialize the package
     emailAuth = new EmailAuth(
       sessionName: "Sample session",
     );
+
+    /// Configuring the remote server
     // emailAuth.config(remoteServerConfiguration);
-
-    /// Setting the session name or the Company name
-    // EmailAuth.sessionName = "Company Name";
-
-    /// Set your custom server URL
-    // EmailAuth.serverUrl = "server URL";
   }
 
   /// a void function to verify if the Data provided is true
+  /// Convert it into a boolean function to match your needs.
   void verify() {
-    print("Inside validate");
-    // print(EmailAuth.validate(
-    //     receiverMail: _emailcontroller.value.text,
-    //     userOTP: _otpcontroller.value.text));
+    print(emailAuth.validateOtp(
+        recipientMail: _emailcontroller.value.text,
+        userOtp: _otpcontroller.value.text));
   }
 
   /// a void funtion to send the OTP to the user
+  /// Can also be converted into a Boolean function and render accordingly for providers
   void sendOtp() async {
     bool result =
         await emailAuth.sendOtp(recipientMail: _emailcontroller.value.text);

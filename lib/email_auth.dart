@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:convert' as convert;
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'dart:io';
 
 late String _finalOTP;
 late String _finalEmail;
@@ -37,15 +36,18 @@ Future<bool> _isValidServer(String url) async {
 }
 
 /// This function will take care of converting the reponse data and verify the mail ID provided.
-bool convertData(http.Response _response, String receiverMail) {
+bool _convertData(http.Response _response, String recipientMail) {
   try {
     Map<String, dynamic> _data = convert.jsonDecode(_response.body);
+
+    /// On Success get the data from the message and store them in the variables for the final verification
     if (_data["success"]) {
+      _finalEmail = recipientMail;
       _finalOTP = _data["OTP"].toString();
-      print("OTP sent successfully !");
+      print("email-auth >> OTP sent successfully ✅");
       return true;
     } else {
-      print("OTP was not sent failure");
+      print("email-auth >> Failed to send OTP ❌");
       return false;
     }
   } catch (error) {
@@ -58,9 +60,9 @@ bool convertData(http.Response _response, String receiverMail) {
 
 class EmailAuth {
   // The server
-  late String server = "";
-  late String serverKey = "";
-  bool validRemote = false;
+  late String _server = "";
+  late String _serverKey = "";
+  bool _validRemote = false;
 
   // The session name
   String sessionName;
@@ -71,13 +73,13 @@ class EmailAuth {
   EmailAuth({
     required this.sessionName,
   }) {
-    print("Initialising");
+    print("Initialising Email-Auth server");
 
     /// future patch
     // _init();
   }
 
-  /// made for future patch
+  // made for future patch
   // _init() {  }
 
   /// configuring the external server
@@ -88,18 +90,19 @@ class EmailAuth {
       // print(data);
 
       if (data.containsKey('server') && data.containsKey('serverKey')) {
+        /// Only proceed further if the server is valid as per the function _isValidServer
         if (await _isValidServer(data['server']!)) {
-          this.server = data['server']!;
-          this.serverKey = data['serverKey']!;
-          this.validRemote = true;
+          this._server = data['server']!;
+          this._serverKey = data['serverKey']!;
+          this._validRemote = true;
           print("email-auth >> The remote server configurations are valid");
         } else {
           throw new ErrorDescription(
-              "email-auth >> The server is not a valid.\nemail-auth >> got \"${data['server']}\"");
+              "email-auth >> The remote server is not a valid.\nemail-auth >> got \"${data['server']}\"");
         }
       } else {
         throw new ErrorDescription(
-            "email-auth >> Server configurations are not valid");
+            "email-auth >> Remote server configurations are not valid");
       }
     } catch (error) {
       print("\n--- package Error ---\n");
@@ -109,20 +112,23 @@ class EmailAuth {
   }
 
   /// Takes care of sending the OTP to the server.
+  /// returns a Boolean.
   Future<bool> sendOtp({required String recipientMail}) async {
     try {
       if (!_isEmail(recipientMail)) {
-        print("email-auth >> email ID is INVALID");
+        print("email-auth >> email ID provided is INVALID");
         return false;
       }
-      if (this.server.isEmpty) {
+      if (this._server.isEmpty) {
         print(
             "email-auth >> Remote server is not available -- using test server --");
+        print("email-auth >> ❗ Warning this is not reliable on production");
         http.Response _response = await http.get(Uri.parse(
             "https://app-authenticator.herokuapp.com/dart/auth/${recipientMail}?CompanyName=${this.sessionName}"));
 
-        return convertData(_response, recipientMail);
-      } else if (validRemote) {
+        return _convertData(_response, recipientMail);
+      } else if (_validRemote) {
+        // TODO : Pending remote server section
         print("remote server is valid");
         return true;
       }
@@ -133,5 +139,23 @@ class EmailAuth {
       print("--- End Package Error ---");
       return false;
     }
+  }
+
+  /// Boolean function to verify that the provided OTP and the user Email Ids, are all same.
+  bool validateOtp({required String recipientMail, required String userOtp}) {
+    if (_finalEmail.isEmpty || _finalOTP.isEmpty) {
+      print(
+          "email-auth >> The OTP should be sent before performing validation");
+      return false;
+    }
+
+    if (_finalEmail.trim() == recipientMail.trim() &&
+        _finalOTP.trim() == userOtp.trim()) {
+      print("email-auth >> Validation success ✅");
+      return true;
+    }
+
+    print("email-auth >> Validation failure ❌");
+    return false;
   }
 }
