@@ -1,6 +1,11 @@
-/// This file contais a class that has the options to set the session name and the serverUrl
-/// - session name : will be the company name
-/// - serverUrl : (defaults : 'default') OR the valid server url link provided by the user generated using the node package :
+/// This file contains a Class to handle the process of sending OTP
+/// There are no static methods like the previous one, and they are all instance members
+///
+/// ------------- Remote server config --------------
+/// requires a auth.config.dart pacakge
+/// should follow the variable conventions as follows :
+/// var remoteServerConfig = {"server" : "serverUrl", "serverKey" : "Key generted from the email-auth-node package"}
+/// You can pass "remoteServerConfig" to the emailAuth instance.config() and generate them.
 
 import 'dart:async';
 import 'dart:convert' as convert;
@@ -39,7 +44,7 @@ Future<bool> _isValidServer(String url) async {
 bool _convertData(http.Response _response, String recipientMail) {
   try {
     Map<String, dynamic> _data = convert.jsonDecode(_response.body);
-    print(_data); // : For future verification
+    // print(_data); // : For future verification
 
     /// On Success get the data from the message and store them in the variables for the final verification
     if (_data["success"]) {
@@ -84,7 +89,7 @@ class EmailAuth {
 
   /// configuring the external server
   /// the Map should be of the pattern {"server" : "", "serverKey" : ""}
-  void config(Map<String, String> data) async {
+  Future<bool> config(Map<String, String> data) async {
     try {
       // Check the existence of the keys
       // print(data);
@@ -96,6 +101,7 @@ class EmailAuth {
           this._serverKey = data['serverKey']!;
           this._validRemote = true;
           print("email-auth >> The remote server configurations are valid");
+          return true;
         } else {
           throw new ErrorDescription(
               "email-auth >> The remote server is not a valid.\nemail-auth >> got \"${data['server']}\"");
@@ -108,6 +114,7 @@ class EmailAuth {
       print("\n--- package Error ---\n");
       print(error);
       print("--- package Error ---");
+      return false;
     }
   }
 
@@ -127,6 +134,7 @@ class EmailAuth {
             "email-auth >> Remote server is not available -- using test server --");
         print("email-auth >> ❗ Warning this is not reliable on production");
         http.Response _response = await http.get(Uri.parse(
+            // ignore: unnecessary_brace_in_string_interps
             "https://app-authenticator.herokuapp.com/dart/auth/${recipientMail}?CompanyName=${this.sessionName}"));
 
         return _convertData(_response, recipientMail);

@@ -28,7 +28,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
     // initialize the package
     emailAuth = new EmailAuth(
       sessionName: "Sample session",
