@@ -1,18 +1,21 @@
-# ** Currently on Maintanence, No worries the package will work fine, We are updating to match the user requests 😸🚀
-
 # Email verification for Flutter Apps using DART.
 
-##### Key points :
+## Key points :
   - This package allows developers to verify that the provided Email is valid and also an existing one,
-  - We confirmit by sending an OTP to the specified email ID and verify them.
+  - It is confirmed by sending an OTP to the specified email ID and verify them.
 
 ## Features!
-  - It has Email ID by default, just call the function and voila... 
-  - **Verifying an email** again call a function and that's it.. 
+  - Has a test server by default, (has limitations of 30 mails : to match the other user needs for testing).
+  - Easy setup of a custom server here. [Node version : email-auth-node](https://github.com/saran-surya/email_auth_node)
+  - Simple methods to send and verify the OTP, all you need as a mandatory parameter is the Email ID.
 
-## Next Plans
-  - Making the availablity of custom Email Ids.
-  - Supporting different formats.
+## Key changes:
+  - No more static methods, All the methods are based on the class instance.
+  - More reliable and understandable method names.
+  - Change in parameters.
+  - Session name is made mandatory.
+  - Additional option to set the OTP length for production servers
+
 
 ## Usage
 ```dart
@@ -20,26 +23,46 @@ import 'package:email_auth/email_auth.dart';
 ...
 Inside your stateLess / Statefull widget class
   ...
+  
+  // Declare the object
+  EmailAuth emailAuth;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the package
+    emailAuth = new EmailAuth(
+      sessionName: "Sample session",
+    );
+
+    /// Configuring the remote server
+    emailAuth.config(remoteServerConfiguration);
+  }
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
-  ///create a method to send the Emails
-  void sendOtp()async{
-    ///Accessing the EmailAuth class from the package
-       EmailAuth.sessionName = "Sample";
-    ///a boolean value will be returned if the OTP is sent successfully
-    var data =
-        await EmailAuth.sendOtp(receiverMail: _emailController.value.text);
-    if(!data){
-        ///have your error handling logic here, like a snackbar or popup widget
+
+  /// a Boolean function to verify if the Data provided is true
+  bool verify() {
+    print(emailAuth.validateOtp(
+        recipientMail: _emailcontroller.value.text,
+        userOtp: _otpcontroller.value.text));
+  }
+
+  /// a void funtion to send the OTP to the user
+  /// Can also be converted into a Boolean function and render accordingly for providers
+  void sendOtp() async {
+    bool result = await emailAuth.sendOtp(
+        recipientMail: _emailcontroller.value.text, otpLength: 5);
+    if (result) {
+      // using a void function because i am using a 
+      // stateful widget and seting the state from here.
+      setState(() {
+        submitValid = true;
+      });
     }
   }
-  ///create a bool method to validate if the OTP is true
-  bool verify(){
-    return(EmailAuth.validate(
-        receiverMail: _emailController.value.text, //to make sure the email ID is not changed
-        userOTP: _otpController.value.text)); //pass in the OTP typed in
-    ///This will return you a bool, and you can proceed further after that, add a fail case and a success case (result will be true/false)
-  }
+  
   ...
    Widget build(BuildContext context) {
    /// have your controllers assigned to textFields or textFormFields
@@ -62,15 +85,18 @@ Inside your stateLess / Statefull widget class
 
 ## Reference
 
-Property |   Type     | Desciption
+Property |   Type     | Description
 -------- |------------| ---------------
-EmailAuth |   `class`     | <sub>The main wrapper class for all the methods and variables</sub>
-EmailAuth.sessionName|   `STATIC value`     | <sub>Call this method to set the CompanyName / Org Name => "sessionName"</sub>
-EmailAuth.sendOtp(receiverMail : "") |   `boolean function`     | <sub>Takes the Email ID and sends OTP returns a boolean</sub>
-EmailAuth.validate(receiverMail : "", userOTP: "")|   `boolean function`     | <sub>Verifies if the provided OTP and mail ID are correct and returns a boolean</sub>
-receiverMail |   `String : method parameter`     | <sub>Takes in the user entered Email ID</sub>
-userOTP |   `String : method parameter`     | <sub>Takes in the user entered OTP that was sent through mail</sub>
+EmailAuth| Main Class| The main Class|
+EmailAuth.sessionName| String | The sessionName of the instance|
+EmailAuth.config| Boolean Function | Used to verify whether the remote server is valid|
+EmailAuth.sendOtp| Boolean Function| Takes care of sending OTP to the mail id provided|
+EmailAuth.validateOtp|Boolean Function|Takes care of verifying the OTP entered by the user|
+
 
 ## Privacy Policy
-We never share the email ID's we get to any service, nor do we use them for our purposes, we regularly clean up the sent mail section, and we never save any data on our servers, we work on the main motive to be **OPEN SOURCE** , If so you have any queries kindly mail me at the email ID provided Always happy to answer :)
+We never share the email ID's we get to any service, nor do we use them for our purposes, we regularly clean up the sent mail section, and we never save any data on our servers, we work on the main motive to be **OPEN SOURCE** , If so you have any queries kindly mail me at the email ID provided Always happy to answer 😸.
+
+## ⭐ If you like the package, a star to the repo will mean a lot.
+### Also feel free to fork the ***main*** branch and add some additional features, Will be eager to verify and add the updates.
 # Thankyou ❤️

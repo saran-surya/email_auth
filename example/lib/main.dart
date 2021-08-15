@@ -23,12 +23,13 @@ class _MyAppState extends State<MyApp> {
   final TextEditingController _emailcontroller = TextEditingController();
   final TextEditingController _otpcontroller = TextEditingController();
 
+  // Declare the object
   EmailAuth emailAuth;
 
   @override
   void initState() {
     super.initState();
-    // initialize the package
+    // Initialize the package
     emailAuth = new EmailAuth(
       sessionName: "Sample session",
     );
@@ -64,66 +65,69 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Email Auth sample'),
         ),
-        body: Center(
-            child: Center(
-          child: Column(
-            children: <Widget>[
-              TextField(
-                controller: _emailcontroller,
-              ),
-              Card(
-                margin: EdgeInsets.only(top: 20),
-                elevation: 6,
-                child: Container(
-                  height: 50,
-                  width: 200,
-                  color: Colors.green[400],
-                  child: GestureDetector(
-                    onTap: sendOtp,
-                    child: Center(
-                      child: Text(
-                        "Request OTP",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20,
+        body: Container(
+          margin: EdgeInsets.all(5),
+          child: Center(
+              child: Center(
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: _emailcontroller,
+                ),
+                Card(
+                  margin: EdgeInsets.only(top: 20),
+                  elevation: 6,
+                  child: Container(
+                    height: 50,
+                    width: 200,
+                    color: Colors.green[400],
+                    child: GestureDetector(
+                      onTap: sendOtp,
+                      child: Center(
+                        child: Text(
+                          "Request OTP",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
 
-              /// A dynamically rendering text field
-              (submitValid)
-                  ? TextField(
-                      controller: _otpcontroller,
-                    )
-                  : Container(height: 1),
-              (submitValid)
-                  ? Container(
-                      margin: EdgeInsets.only(top: 20),
-                      height: 50,
-                      width: 200,
-                      color: Colors.green[400],
-                      child: GestureDetector(
-                        onTap: verify,
-                        child: Center(
-                          child: Text(
-                            "Verify",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 20,
+                /// A dynamically rendering text field
+                (submitValid)
+                    ? TextField(
+                        controller: _otpcontroller,
+                      )
+                    : Container(height: 1),
+                (submitValid)
+                    ? Container(
+                        margin: EdgeInsets.only(top: 20),
+                        height: 50,
+                        width: 200,
+                        color: Colors.green[400],
+                        child: GestureDetector(
+                          onTap: verify,
+                          child: Center(
+                            child: Text(
+                              "Verify",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
-                  : SizedBox(height: 1)
-            ],
-          ),
-        )),
+                      )
+                    : SizedBox(height: 1)
+              ],
+            ),
+          )),
+        ),
       ),
     );
   }

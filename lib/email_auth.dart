@@ -78,7 +78,7 @@ class EmailAuth {
   EmailAuth({
     required this.sessionName,
   }) {
-    print("Initialising Email-Auth server");
+    print("email-auth >> Initialising Email-Auth server");
 
     /// future patch
     // _init();
