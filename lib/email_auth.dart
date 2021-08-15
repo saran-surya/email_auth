@@ -49,6 +49,7 @@ bool _convertData(http.Response _response, String recipientMail) {
       return true;
     } else {
       print("email-auth >> Failed to send OTP ❌");
+      print("email-auth >> Message from server :: ${_data["error"]}");
       return false;
     }
   } catch (error) {
