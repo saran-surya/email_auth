@@ -94,8 +94,8 @@ EmailAuth.sendOtp| Boolean Function| Takes care of sending OTP to the mail id pr
 EmailAuth.validateOtp|Boolean Function|Takes care of verifying the OTP entered by the user|
 
 
-## Privacy Policy
-We never share the email ID's we get to any service, nor do we use them for our purposes, we regularly clean up the sent mail section, and we never save any data on our servers, we work on the main motive to be **OPEN SOURCE** , If so you have any queries kindly mail me at the email ID provided Always happy to answer 😸.
+## Privacy Policy 😸
+We never share the email ID's we get to any service, nor do we use them for our purposes, we regularly clean up the sent mail section, and we never save any data on our servers, we work on the main motive to be **OPEN SOURCE** , If so you have any queries kindly mail me at the email ID provided Always happy to answer.
 
 ## ⭐ If you like the package, a star to the repo will mean a lot.
 ### Also feel free to fork the ***main*** branch and add some additional features, Will be eager to verify and add the updates.
