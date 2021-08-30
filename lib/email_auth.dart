@@ -34,7 +34,12 @@ Future<bool> _isValidServer(String url) async {
         _jsonResponse['message'] == 'success');
   } catch (error) {
     print("--- Package Error ---");
-    print(error);
+    if (error.runtimeType == FormatException) {
+      print("Unable to access remote server. 😑");
+    } else {
+      print(error);
+    }
+    // print(error);
     print("--- End Package Error ---");
     return false;
   }
@@ -59,7 +64,12 @@ bool _convertData(http.Response _response, String recipientMail) {
     }
   } catch (error) {
     print("--- Package Error ---");
-    print(error);
+    if (error.runtimeType == FormatException) {
+      print("Unable to access server. 😑");
+    } else {
+      print(error);
+    }
+    // print(error);
     print("--- End Package Error ---");
     return false;
   }
@@ -80,7 +90,7 @@ class EmailAuth {
   }) {
     print("email-auth >> Initialising Email-Auth server");
 
-    /// future patch
+    // future patch
     // _init();
   }
 
@@ -104,7 +114,7 @@ class EmailAuth {
           return true;
         } else {
           throw new ErrorDescription(
-              "email-auth >> The remote server is not a valid.\nemail-auth >> got \"${data['server']}\"");
+              "email-auth >> The remote server is not a valid.\nemail-auth >> configured server : \"${data['server']}\"");
         }
       } else {
         throw new ErrorDescription(
