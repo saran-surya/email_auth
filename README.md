@@ -128,10 +128,11 @@ recipientMail | param of EmailAuth.sentOtp() method | email ID of the recipient
 otpLength |  param of EmailAuth.sentOtp() method : Defaults to 6 | length of the otp
 EmailAuth.validateOtp|Boolean Function|Takes care of verifying the OTP entered by the user|
 
-## Notable issues / feature requests
+## Notable issues / feature requests / Contributions
 - [crankyvein - UI changes](https://github.com/saran-surya/email_auth/issues/7)
 - [isarojdahal - OTP length feature](https://github.com/saran-surya/email_auth/issues/8)
 - [arinagrawal05 - production server note](https://github.com/saran-surya/email_auth/issues/14)
+- [GJJ2019 - support null safety](https://github.com/saran-surya/email_auth/issues/4)
 
 
 ## Privacy Policy 😸
