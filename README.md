@@ -6,7 +6,8 @@
 
 ## Features!
   - Has a test server by default, (has limitations of 30 mails : to match the other user needs for testing).
-  - Easy setup of a custom server here. [Node version : email-auth-node](https://github.com/saran-surya/email_auth_node)
+  - Easy setup of a custom server here : [Node version : email-auth-node](https://github.com/saran-surya/email_auth_node)
+  - Detailed setup can be found here : [Detailed setup of email-auth production server](https://saran-surya.github.io/email-auth-node/)
   - Simple methods to send and verify the OTP, all you need as a mandatory parameter is the Email ID.
 
 ## Key changes:
@@ -16,8 +17,40 @@
   - Session name is made mandatory.
   - Additional option to set the OTP length for production servers
 
+## Steps
+- ### Initialize the class
+```dart
+EmailAuth emailAuth =  new EmailAuth(sessionName: "Sample session");
+```
+- ### Pass in the remote server config if present
+```dart
+emailAuth.config(remoteServerConfiguration);
 
-## Usage
+// remoteServerConfiguration : Signature
+{
+  "server": "server url",
+  "serverKey": "serverKey"
+}
+```
+- ### Sending an otp
+    Have the method wrapped in a async funtion.
+```dart
+void sendOtp() async {
+  bool result = await emailAuth.sendOtp(
+      recipientMail: _emailcontroller.value.text, otpLength: 5
+      );
+  }
+```
+- ### Validating an otp
+    Have the method wrapped in a funtion for better reusablity.
+```dart
+emailAuth.validateOtp(
+        recipientMail: _emailcontroller.value.text,
+        userOtp: _otpcontroller.value.text)
+```
+
+
+## Usage template example
 ```dart
 import 'package:email_auth/email_auth.dart';
 ...
@@ -91,6 +124,8 @@ EmailAuth| Main Class| The main Class|
 EmailAuth.sessionName| String | The sessionName of the instance|
 EmailAuth.config| Boolean Function | Used to verify whether the remote server is valid|
 EmailAuth.sendOtp| Boolean Function| Takes care of sending OTP to the mail id provided|
+recipientMail | param of EmailAuth.sentOtp() method | email ID of the recipient
+otpLength |  param of EmailAuth.sentOtp() method : Defaults to 6 | length of the otp
 EmailAuth.validateOtp|Boolean Function|Takes care of verifying the OTP entered by the user|
 
 
