@@ -104,7 +104,12 @@ class EmailAuth {
       // Check the existence of the keys
       // print(data);
 
-      if (data.containsKey('server') && data.containsKey('serverKey')) {
+      if (data.containsKey('server') &&
+          data.containsKey('serverKey') &&
+          data['server'] != null &&
+          data['server']!.length > 0 &&
+          data['serverKey'] != null &&
+          data['serverKey']!.length > 0) {
         /// Only proceed further if the server is valid as per the function _isValidServer
         if (await _isValidServer(data['server']!)) {
           this._server = data['server']!;
