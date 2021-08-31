@@ -3,6 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('check failing validation', () {
-    expect(EmailAuth.validate(receiverMail: "sample", userOTP: "15252"), false);
+    expect(
+        new EmailAuth(sessionName: "")
+            .validateOtp(recipientMail: "sample", userOtp: "15252"),
+        false);
   });
 }

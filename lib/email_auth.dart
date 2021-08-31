@@ -1,11 +1,16 @@
-/// This file contais a class that has the options to set the session name and the serverUrl
-/// - session name : will be the company name
-/// - serverUrl : (defaults : 'default') OR the valid server url link provided by the user generated using the node package :
+/// This file contains a Class to handle the process of sending OTP
+/// There are no static methods like the previous one, and they are all instance members
+///
+/// ------------- Remote server config --------------
+/// requires a auth.config.dart pacakge
+/// should follow the variable conventions as follows :
+/// var remoteServerConfig = {"server" : "serverUrl", "serverKey" : "Key generted from the email-auth-node package"}
+/// You can pass "remoteServerConfig" to the emailAuth instance.config() and generate them.
 
 import 'dart:async';
 import 'dart:convert' as convert;
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'dart:io';
 
 late String _finalOTP;
 late String _finalEmail;
@@ -18,149 +23,165 @@ bool _isEmail(String email) {
   return regExp.hasMatch(email);
 }
 
-bool _isValidServer(String url) {
-  String reg = r".*/dart/auth/";
-  return RegExp(reg).hasMatch(url);
-}
-
-/// This function will take care of converting the reponse data and verify the mail ID provided.
-bool convertData(http.Response _response, String receiverMail) {
+Future<bool> _isValidServer(String url) async {
   try {
-    Map<String, dynamic> _data = convert.jsonDecode(_response.body);
-    if (_data["success"]) {
-      _finalOTP = _data["OTP"].toString();
-      print("OTP sent successfully !");
-      return true;
-    } else {
-      print("OTP was not sent failure");
-      return false;
-    }
+    /// Performs a get request to the dummy end of the server :
+    /// Expected result : {"message" : "success"}
+    http.Response _serverResponse = await http.get(Uri.parse("$url/test/dart"));
+    Map<String, dynamic> _jsonResponse =
+        convert.jsonDecode(_serverResponse.body);
+    return (_jsonResponse.containsKey("message") &&
+        _jsonResponse['message'] == 'success');
   } catch (error) {
     print("--- Package Error ---");
-    print(error);
+    if (error.runtimeType == FormatException) {
+      print("Unable to access remote server. 😑");
+    } else {
+      print(error);
+    }
+    // print(error);
     print("--- End Package Error ---");
     return false;
   }
 }
 
-// class EmailAuth {
-//   /// A class to handle the OTP operations
-//   /// Assign your session Name / Company name here using the static method
-//   static late String sessionName;
+/// This function will take care of converting the reponse data and verify the mail ID provided.
+bool _convertData(http.Response _response, String recipientMail) {
+  try {
+    Map<String, dynamic> _data = convert.jsonDecode(_response.body);
+    // print(_data); // : For future verification
 
-//   /// SERVER : defaults to default
-//   static String serverUrl = 'default';
-
-//   /// This functions returns a future of boolean stating if the OTP was sent.
-//   static Future<bool> sendOtp({required String receiverMail}) async {
-//     try {
-//       /// Setting the final Email email for validation purposes
-//       _finalEmail = receiverMail;
-
-//       if (!_isEmail(receiverMail)) {
-//         print("email ID is not valid");
-//         return false;
-//       }
-//       print("Email ID is valid");
-//       http.Response _response;
-
-//       /// Constant ending for every url
-//       String constantEnd =
-//           "${receiverMail.toLowerCase()}?CompanyName=$sessionName";
-
-//       if (serverUrl != 'default' && _isValidServer(serverUrl)) {
-//         _response = await http.get(
-//           Uri.parse(serverUrl + constantEnd),
-//         );
-
-//         /// Return the boolean data from the converted function
-//         return convertData(_response, receiverMail);
-//       } else if (serverUrl == 'default') {
-//         /// This will use your API and contact with your server on heroku.
-//         _response = await http.get(
-//           Uri.parse(
-//             "https://app-authenticator.herokuapp.com/dart/auth/" + constantEnd,
-//           ),
-//         );
-
-//         /// Return the boolean data from the converted function
-//         return convertData(_response, receiverMail);
-//       }
-
-//       /// Defaults false by default
-//       print("--- The server URL is not valid ---");
-//       return false;
-//     } catch (error) {
-//       print("--- This error is from the package ---");
-//       print(error);
-//       print("--- End package error message ---");
-//       return false;
-//     }
-//   }
-
-//   /// This functions returns a future of boolean stating if the user provided data is correct
-//   static bool validate(
-//       {required String receiverMail, required String userOTP}) {
-//     if (_finalEmail.length > 0 && _finalOTP.length > 0) {
-//       if (receiverMail.trim() == _finalEmail.trim() &&
-//           userOTP.trim() == _finalOTP.trim()) {
-//         print("Validation success the user can be validated");
-//         return true;
-//       } else {
-//         print("Validation Falied");
-//         return false;
-//       }
-//     }
-//     print("Missing Data");
-//     return false;
-//   }
-// }
+    /// On Success get the data from the message and store them in the variables for the final verification
+    if (_data["success"]) {
+      _finalEmail = recipientMail;
+      _finalOTP = _data["OTP"].toString();
+      print("email-auth >> OTP sent successfully ✅");
+      return true;
+    } else {
+      print("email-auth >> Failed to send OTP ❌");
+      print("email-auth >> Message from server :: ${_data["error"]}");
+      return false;
+    }
+  } catch (error) {
+    print("--- Package Error ---");
+    if (error.runtimeType == FormatException) {
+      print("Unable to access server. 😑");
+    } else {
+      print(error);
+    }
+    // print(error);
+    print("--- End Package Error ---");
+    return false;
+  }
+}
 
 class EmailAuth {
   // The server
-  String server;
+  late String _server = "";
+  late String _serverKey = "";
+  bool _validRemote = false;
+
   // The session name
   String sessionName;
 
+  // Contructing the Class with the server and the session Name
   EmailAuth({
-    required this.server,
     required this.sessionName,
   }) {
-    /// initializing the configuration
-    _init();
+    print("email-auth >> Initialising Email-Auth server");
+
+    // future patch
+    // _init();
   }
 
-  /// Used to verify the presence of the server configurations
-  _init() {
-    if (this.server == 'config') {
-      String filePath = readConfig(Directory.current);
-      if (filePath != "") {
-        print(filePath);
-        String contents = new File(filePath).readAsStringSync();
-        var serverData = convert.json.decode(contents);
-        print(serverData['server']);
-        print(serverData['key']);
+  // made for future patch
+  // _init() {  }
+
+  /// configuring the external server
+  /// the Map should be of the pattern {"server" : "", "serverKey" : ""}
+  Future<bool> config(Map<String, String> data) async {
+    try {
+      // Check the existence of the keys
+      // print(data);
+
+      if (data.containsKey('server') &&
+          data.containsKey('serverKey') &&
+          data['server'] != null &&
+          data['server']!.length > 0 &&
+          data['serverKey'] != null &&
+          data['serverKey']!.length > 0) {
+        /// Only proceed further if the server is valid as per the function _isValidServer
+        if (await _isValidServer(data['server']!)) {
+          this._server = data['server']!;
+          this._serverKey = data['serverKey']!;
+          this._validRemote = true;
+          print("email-auth >> The remote server configurations are valid");
+          return true;
+        } else {
+          throw new ErrorDescription(
+              "email-auth >> The remote server is not a valid.\nemail-auth >> configured server : \"${data['server']}\"");
+        }
+      } else {
+        throw new ErrorDescription(
+            "email-auth >> Remote server configurations are not valid");
       }
+    } catch (error) {
+      print("\n--- package Error ---\n");
+      print(error);
+      print("--- package Error ---");
+      return false;
     }
   }
 
-  String getConfigPath(root) {
-    return "";
-  }
-
-  String readConfig(Directory rootDir) {
-    // print(rootDir.path);
-    if (!rootDir.path.contains("lib")) {
-      print("File not found");
-      return "";
-    }
-    List<FileSystemEntity> entries =
-        rootDir.listSync(recursive: false).toList();
-    for (var file in entries) {
-      if (file is File && file.path.contains("auth.config")) {
-        return (file.path);
+  /// Takes care of sending the OTP to the server.
+  /// returns a Boolean.
+  Future<bool> sendOtp(
+      {required String recipientMail, int otpLength = 6}) async {
+    try {
+      if (!_isEmail(recipientMail)) {
+        print("email-auth >> email ID provided is INVALID");
+        return false;
       }
+
+      /// Defaults to the test server (reverts) : if the remote server is provided
+      if (this._server.isEmpty) {
+        print(
+            "email-auth >> Remote server is not available -- using test server --");
+        print("email-auth >> ❗ Warning this is not reliable on production");
+        http.Response _response = await http.get(Uri.parse(
+            // ignore: unnecessary_brace_in_string_interps
+            "https://app-authenticator.herokuapp.com/dart/auth/${recipientMail}?CompanyName=${this.sessionName}"));
+
+        return _convertData(_response, recipientMail);
+      } else if (_validRemote) {
+        http.Response _response = await http.get(Uri.parse(
+            "${this._server}/dart/auth/$recipientMail?CompanyName=${this.sessionName}&key=${this._serverKey}&otpLength=$otpLength"));
+        return _convertData(_response, recipientMail);
+      }
+      return false;
+    } catch (error) {
+      print("--- Package Error ---");
+      print(error);
+      print("--- End Package Error ---");
+      return false;
     }
-    return readConfig(rootDir.parent);
+  }
+
+  /// Boolean function to verify that the provided OTP and the user Email Ids, are all same.
+  bool validateOtp({required String recipientMail, required String userOtp}) {
+    if (_finalEmail.isEmpty || _finalOTP.isEmpty) {
+      print(
+          "email-auth >> The OTP should be sent before performing validation");
+      return false;
+    }
+
+    if (_finalEmail.trim() == recipientMail.trim() &&
+        _finalOTP.trim() == userOtp.trim()) {
+      print("email-auth >> Validation success ✅");
+      return true;
+    }
+
+    print("email-auth >> Validation failure ❌");
+    return false;
   }
 }

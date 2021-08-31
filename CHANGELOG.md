@@ -33,3 +33,6 @@
 
 ## 0.0.1+3
   - Merged a new pull request, Migrating to Null safety and package upgrades.
+
+## 1.0.0
+  - Stable null safe version with the additional support to match the requests from the custom remote server.

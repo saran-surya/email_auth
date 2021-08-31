@@ -7,3 +7,7 @@
 build/
 
 lib/test/
+
+auth.config.dart
+
+git.diff.txt
