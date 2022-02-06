@@ -120,8 +120,8 @@ Inside your stateLess / Statefull widget class
 
 Property |   Type     | Description
 -------- |------------| ---------------
-EmailAuth| Main Class| The main Class|
-EmailAuth.sessionName| String | The sessionName of the instance|
+EmailAuth|  Class | The parent Class|
+EmailAuth.sessionName| String | The sessionName of the instance to be used |
 EmailAuth.config| Boolean Function | Used to verify whether the remote server is valid|
 EmailAuth.sendOtp| Boolean Function| Takes care of sending OTP to the mail id provided|
 recipientMail | param of EmailAuth.sentOtp() method | email ID of the recipient
