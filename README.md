@@ -1,5 +1,10 @@
 # Email verification for Flutter Apps using DART.
 
+## Update : (Google turning off less secure apps / Switching to OAuth / more secure apps ) Please expect a delay in the update. PR's are welcome 🚀
+https://github.com/saran-surya/email_auth/discussions/66#discussion-4027810
+
+<hr/>
+
 ## Key points :
   - This package allows developers to verify that the provided Email is valid and also an existing one,
   - It is confirmed by sending an OTP to the specified email ID and verify them.
