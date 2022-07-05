@@ -3,6 +3,15 @@
 ## Update : (Google turning off less secure apps / Switching to OAuth / more secure apps ) Please expect a delay in the update. PR's are welcome 🚀
 https://github.com/saran-surya/email_auth/discussions/66#discussion-4027810
 
+```diff
+- Test servers will work fine, kindly use test servers for time being, Productions servers will recieve patch in the coming week
+- Steps : 
+-       1) Remove the variable to access remote server configuration and everything should be fine.
+-       2) Current limits has been adjusted to 50 per session.
+```
+
+
+
 <hr/>
 
 ## Key points :
