@@ -1,10 +1,12 @@
 import 'package:email_auth/email_auth.dart';
+import 'package:example/auth.config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Importing the configuration file to pass them to the EmailAuth instance
 /// You can have a custom path and a variable name,
 /// but the Map should be in the pattern {server : "", serverKey : ""}
-import 'package:email_auth_example/auth.config.dart';
+// import 'package:email_auth_example/auth.config.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,13 +26,13 @@ class _MyAppState extends State<MyApp> {
   final TextEditingController _otpcontroller = TextEditingController();
 
   // Declare the object
-  EmailAuth emailAuth;
+  late EmailAuth emailAuth;
 
   @override
   void initState() {
     super.initState();
     // Initialize the package
-    emailAuth = new EmailAuth(
+    emailAuth = EmailAuth(
       sessionName: "Sample session",
     );
 
@@ -41,9 +43,11 @@ class _MyAppState extends State<MyApp> {
   /// a void function to verify if the Data provided is true
   /// Convert it into a boolean function to match your needs.
   void verify() {
-    print(emailAuth.validateOtp(
-        recipientMail: _emailcontroller.value.text,
-        userOtp: _otpcontroller.value.text));
+    if (kDebugMode) {
+      print(emailAuth.validateOtp(
+          recipientMail: _emailcontroller.value.text,
+          userOtp: _otpcontroller.value.text));
+    }
   }
 
   /// a void funtion to send the OTP to the user
