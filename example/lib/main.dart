@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Email Auth sample'),
         ),
         body: Container(
-          margin: EdgeInsets.all(5),
+          margin: const EdgeInsets.all(5),
           child: Center(
               child: Center(
             child: Column(
@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
                   controller: _emailcontroller,
                 ),
                 Card(
-                  margin: EdgeInsets.only(top: 20),
+                  margin: const EdgeInsets.only(top: 20),
                   elevation: 6,
                   child: Container(
                     height: 50,
@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
                     color: Colors.green[400],
                     child: GestureDetector(
                       onTap: sendOtp,
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           "Request OTP",
                           style: TextStyle(
@@ -109,13 +109,13 @@ class _MyAppState extends State<MyApp> {
                     : Container(height: 1),
                 (submitValid)
                     ? Container(
-                        margin: EdgeInsets.only(top: 20),
+                        margin: const EdgeInsets.only(top: 20),
                         height: 50,
                         width: 200,
                         color: Colors.green[400],
                         child: GestureDetector(
                           onTap: verify,
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               "Verify",
                               style: TextStyle(
@@ -127,7 +127,7 @@ class _MyAppState extends State<MyApp> {
                           ),
                         ),
                       )
-                    : SizedBox(height: 1)
+                    : const SizedBox(height: 1)
               ],
             ),
           )),
