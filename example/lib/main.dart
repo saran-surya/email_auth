@@ -43,18 +43,13 @@ class _MyAppState extends State<MyApp> {
   /// a void function to verify if the Data provided is true
   /// Convert it into a boolean function to match your needs.
   void verify() {
-    if (kDebugMode) {
-      print(emailAuth.validateOtp(
-          recipientMail: _emailcontroller.value.text,
-          userOtp: _otpcontroller.value.text));
-    }
+    print(emailAuth.validateOtp(recipientMail: _emailcontroller.value.text, userOtp: _otpcontroller.value.text));
   }
 
   /// a void funtion to send the OTP to the user
   /// Can also be converted into a Boolean function and render accordingly for providers
   void sendOtp() async {
-    bool result = await emailAuth.sendOtp(
-        recipientMail: _emailcontroller.value.text, otpLength: 5);
+    bool result = await emailAuth.sendOtp(recipientMail: _emailcontroller.value.text, otpLength: 5);
     if (result) {
       setState(() {
         submitValid = true;

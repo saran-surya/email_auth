@@ -9,13 +9,15 @@
 
 import 'dart:async';
 import 'dart:convert' as convert;
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 late String _finalOTP;
 late String _finalEmail;
 
-late Map<String, String> _serverConfiguration;
+Map<String, String> _serverRuntime = {};
 
 /// Validates the email ID provided.
 bool _isEmail(String email) {
@@ -32,16 +34,27 @@ Future<bool> _isValidServer(String serverUrl) async {
 
     Map<String, dynamic> _jsonResponse = convert.jsonDecode(_serverResponse.body);
 
-    return (_jsonResponse.containsKey("message") && _jsonResponse['message'] == 'success');
-  } catch (error) {
-    print("--- Package Error ---");
-    if (error.runtimeType == FormatException) {
-      print("Unable to access remote server. 😑");
+    if (_jsonResponse.containsKey("status") && _jsonResponse['status'].toString().toLowerCase() == "true") {
+      _serverRuntime["get-request-check"] = "TRUE";
+      _serverRuntime["server-active"] = "TRUE";
     } else {
-      print(error);
+      _serverRuntime["get-request-check"] = "FALSE";
+      throw new ErrorDescription("email-auth >> Server returned the following data :: $_jsonResponse");
     }
-    // print(error);
-    print("--- End Package Error ---");
+
+    return true;
+  } catch (error) {
+    if (kDebugMode) {
+      if (error.runtimeType == FormatException || error.toString().contains("timed out")) {
+        _serverRuntime["server-active"] = "FALSE";
+        _serverRuntime["server-error"] = error.toString();
+        print("Unable to access remote server. 😑");
+      } else {
+        print("--- Package Error ---");
+        print(error);
+        print("--- End Package Error ---");
+      }
+    }
     return false;
   }
 }
@@ -86,12 +99,10 @@ class EmailAuth {
   String sessionName;
 
   // Contructing the Class with the server and the session Name
-  EmailAuth({
-    required this.sessionName,
-  }) {
+  EmailAuth({required this.sessionName}) {
     print("email-auth >> Initialising Email-Auth server");
 
-    _serverConfiguration["sessionName"] = sessionName;
+    _serverRuntime["sessionName"] = sessionName;
 
     // future patch
     // _init();
@@ -105,7 +116,9 @@ class EmailAuth {
   Future<bool> config(Map<String, String> data) async {
     try {
       // Check the existence of the keys
-      // print(data);
+      if (kDebugMode) {
+        print(data);
+      }
 
       if (data.containsKey('server') &&
           data.containsKey('serverKey') &&
@@ -115,15 +128,15 @@ class EmailAuth {
           data['serverKey']!.length > 0) {
         //
         // Saving server configuration for kdebugMode
-        _serverConfiguration["server"] = data['server']!;
-        _serverConfiguration["serverKey"] = data['serverKey']!;
+        _serverRuntime["server"] = data['server']!;
+        _serverRuntime["serverKey"] = data['serverKey']!;
 
         /// Only proceed further if the server is valid as per the function _isValidServer
         if (await _isValidServer(data['server']!)) {
           // this._server = data['server']!;
           // this._serverKey = data['serverKey']!;
           this._validRemote = true;
-          _serverConfiguration["validRemote"] = "true";
+          _serverRuntime["validRemote"] = "true";
 
           print("email-auth >> The remote server configurations are valid");
           return true;
