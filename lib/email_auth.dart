@@ -9,15 +9,13 @@
 
 import 'dart:async';
 import 'dart:convert' as convert;
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 late String _finalOTP;
 late String _finalEmail;
 
-Map<String, String> _serverRuntime = {};
+Map<String, String> _serverRuntime = {"validRemote": "false"};
 
 /// Validates the email ID provided.
 bool _isEmail(String email) {
@@ -91,9 +89,9 @@ bool _convertData(http.Response _response, String recipientMail) {
 
 class EmailAuth {
   // The server
-  late String _server = "";
-  late String _serverKey = "";
-  bool _validRemote = false;
+  // late String _server = "";
+  // late String _serverKey = "";
+  // bool _validRemote = false;
 
   // The session name
   String sessionName;
@@ -128,6 +126,11 @@ class EmailAuth {
           data['serverKey']!.length > 0) {
         //
         // Saving server configuration for kdebugMode
+
+        // resolving the conflict to map the trailing slashes
+        if (data['server']![data['server']!.length - 1] == "/") {
+          data['server'] = data['server']!.substring(0, data['server']!.length - 1);
+        }
         _serverRuntime["server"] = data['server']!;
         _serverRuntime["serverKey"] = data['serverKey']!;
 
@@ -135,7 +138,7 @@ class EmailAuth {
         if (await _isValidServer(data['server']!)) {
           // this._server = data['server']!;
           // this._serverKey = data['serverKey']!;
-          this._validRemote = true;
+          // this._validRemote = true;
           _serverRuntime["validRemote"] = "true";
 
           print("email-auth >> The remote server configurations are valid");
@@ -176,17 +179,21 @@ class EmailAuth {
       }
 
       /// Defaults to the test server (reverts) : if the remote server is provided
-      if (this._server.isEmpty) {
+      if (_serverRuntime["validRemote"]!.toLowerCase() == "false" || _serverRuntime["server"]!.length <= 0) {
         print("email-auth >> Remote server is not available -- using test server --");
         print("email-auth >> ❗ Warning this is not reliable on production");
-        http.Response _response = await http.get(Uri.parse(
-            // ignore: unnecessary_brace_in_string_interps
-            "https://app-authenticator.herokuapp.com/dart/auth/${recipientMail}?CompanyName=${this.sessionName}"));
+        print("email-auth >> Test servers are marked obselete, Kindly set up a production server");
+        return false;
+        // http.Response _response = await http.get(Uri.parse(
+        //     // ignore: unnecessary_brace_in_string_interps
+        //     "https://app-authenticator.herokuapp.com/dart/auth/${recipientMail}?CompanyName=${this.sessionName}"));
 
-        return _convertData(_response, recipientMail);
-      } else if (_validRemote) {
+        // return _convertData(_response, recipientMail);
+      } else if (_serverRuntime["validRemote"] != null && _serverRuntime["validRemote"]!.toLowerCase() == "true") {
         http.Response _response = await http.get(Uri.parse(
-            "${this._server}/dart/auth/$recipientMail?CompanyName=${this.sessionName}&key=${this._serverKey}&otpLength=$otpLength"));
+            // "${this._server}/dart/auth/$recipientMail?CompanyName=${this.sessionName}&key=${this._serverKey}&otpLength=$otpLength"));
+            "${_serverRuntime["server"]}/dart/auth/$recipientMail?CompanyName=${_serverRuntime["sessionName"]}&key=${_serverRuntime["serverKey"]}&otpLength=$otpLength"));
+
         return _convertData(_response, recipientMail);
       }
       return false;
