@@ -1,14 +1,7 @@
 # Email verification for Flutter Apps using DART.
-
-## Update : (Google turning off less secure apps / Switching to OAuth)🚀
-https://github.com/saran-surya/email_auth/discussions/66#discussion-4027810
-
-## TEST SERVERS OBSOLETE : https://github.com/saran-surya/email_auth/discussions/74#discussioncomment-4270459
-
 ## 👀 Kindly add the repo to Watch list, to get latest updates regarding servers and packages.
 
-
-
+## TEST SERVERS OBSOLETE : https://github.com/saran-surya/email_auth/discussions/74#discussioncomment-4270459
 <hr/>
 
 ## Key points :
