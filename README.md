@@ -28,7 +28,9 @@ https://github.com/saran-surya/email_auth/discussions/66#discussion-4027810
   - Session name is made mandatory.
   - Additional option to set the OTP length for production servers
   - Enriched log messages
+  - <img src="https://github.com/saran-surya/email_auth/blob/version-2/.github/assets/client_logs.png" height="200">
   - Get detailed logs from server when on debug mode.
+  - <img src="https://github.com/saran-surya/email_auth/blob/version-2/.github/assets/server_logs.png" height="250">
 
 ## Steps
 - ### Initialize the class
