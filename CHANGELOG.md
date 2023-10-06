@@ -36,3 +36,8 @@
 
 ## 1.0.0
   - Stable null safe version with the additional support to match the requests from the custom remote server.
+
+## 1.1.0
+  - Better error handling for production based servers
+  - Better logging on debug mode for flutter projects
+  - Class method and access changes to make the functions less prone to errors 

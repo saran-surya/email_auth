@@ -16,7 +16,7 @@ https://github.com/saran-surya/email_auth/discussions/66#discussion-4027810
   - It is confirmed by sending an OTP to the specified email ID and verify them.
 
 ## Features!
-  - Has a test server by default, (has limitations of 30 mails : to match the other user needs for testing).
+  - (Depricated) Has a test server by default, (has limitations of 30 mails : to match the other user needs for testing).
   - Easy setup of a custom server here : [Node version : email-auth-node](https://github.com/saran-surya/email_auth_node)
   - Detailed setup can be found here : [Detailed setup of email-auth production server](https://saran-surya.github.io/email-auth-node/)
   - Simple methods to send and verify the OTP, all you need as a mandatory parameter is the Email ID.
@@ -27,6 +27,10 @@ https://github.com/saran-surya/email_auth/discussions/66#discussion-4027810
   - Change in parameters.
   - Session name is made mandatory.
   - Additional option to set the OTP length for production servers
+  - Enriched log messages
+  - ![client_logs image]("https://github.com/saran-surya/email_auth/blob/version-2/.github/assets/client_logs.png")
+  - Get detailed logs from server when on debug mode.
+  - ![server_logs image]("https://github.com/saran-surya/email_auth/blob/version-2/.github/assets/server_logs.png")
 
 ## Steps
 - ### Initialize the class
