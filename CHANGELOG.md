@@ -40,4 +40,4 @@
 ## 1.1.0
   - Better error handling for production based servers
   - Better logging on debug mode for flutter projects
-  - Class method and access changes to make the functions less prone to errors
+  - Class method and access changes to make the functions less prone to errors 
