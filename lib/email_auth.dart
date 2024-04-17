@@ -1,12 +1,3 @@
-/// This file contains a Class to handle the process of sending OTP
-/// There are no static methods like the previous one, and they are all instance members
-///
-/// ------------- Remote server config --------------
-/// requires a auth.config.dart pacakge
-/// should follow the variable conventions as follows :
-/// var remoteServerConfig = {"server" : "serverUrl", "serverKey" : "Key generted from the email-auth-node package"}
-/// You can pass "remoteServerConfig" to the emailAuth instance.config() and generate them.
-
 import 'dart:async';
 import 'dart:convert' as convert;
 import 'package:flutter/foundation.dart';
@@ -87,6 +78,11 @@ bool _convertData(http.Response _response, String recipientMail) {
   }
 }
 
+/// Class EmailAuth
+/// requires a auth.config.dart pacakge
+/// should follow the variable conventions as follows :
+/// var remoteServerConfig = {"server" : "serverUrl", "serverKey" : "Key generted from the email-auth-node package"}
+/// You can pass "remoteServerConfig" to the emailAuth instance.config() and generate them.
 class EmailAuth {
   // The server
   // late String _server = "";
@@ -99,15 +95,8 @@ class EmailAuth {
   // Contructing the Class with the server and the session Name
   EmailAuth({required this.sessionName}) {
     print("email-auth >> Initialising Email-Auth server");
-
     _serverRuntime["sessionName"] = sessionName;
-
-    // future patch
-    // _init();
   }
-
-  // made for future patch
-  // _init() {  }
 
   /// configuring the external server
   /// the Map should be of the pattern {"server" : "", "serverKey" : ""}
@@ -124,10 +113,6 @@ class EmailAuth {
           data['server']!.length > 0 &&
           data['serverKey'] != null &&
           data['serverKey']!.length > 0) {
-        //
-        // Saving server configuration for kdebugMode
-
-        // resolving the conflict to map the trailing slashes
         if (data['server']![data['server']!.length - 1] == "/") {
           data['server'] = data['server']!.substring(0, data['server']!.length - 1);
         }
@@ -136,9 +121,6 @@ class EmailAuth {
 
         /// Only proceed further if the server is valid as per the function _isValidServer
         if (await _isValidServer(data['server']!)) {
-          // this._server = data['server']!;
-          // this._serverKey = data['serverKey']!;
-          // this._validRemote = true;
           _serverRuntime["validRemote"] = "true";
 
           print("email-auth >> The remote server configurations are valid");

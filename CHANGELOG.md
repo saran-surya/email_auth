@@ -44,3 +44,6 @@
 
 ## 1.1.1
   - Documentation changes
+
+## 2.0.0
+  - Completely stable update (With latest patches with email_auth_node support)
