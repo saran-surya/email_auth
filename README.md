@@ -1,5 +1,6 @@
 # Email verification for Flutter Apps using DART.
-## 👀 Kindly add the repo to Watch list, to get latest updates regarding servers and packages.
+## 👀 The repository has reached END OF SUPPORT (Due to multiple reasons)
+### Please feel free to contact me, In case you need to set this up for a college project, There are work-arounds available and i will be happy to help.
 
 ## TEST SERVERS OBSOLETE : https://github.com/saran-surya/email_auth/discussions/74#discussioncomment-4270459
 <hr/>
